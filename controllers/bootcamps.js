@@ -5,6 +5,9 @@ const Bootcamp = require('../models/Bootcamp');
 
 //  @desc       Get all bootcamps
 //  @route      GET /api/v1/bootcamps
+//  @route      GET /api/v1/bootcamps?location[gt]=762
+//  @route      GET /api/v1/bootcamps?page=5&limit=54
+//  @route      GET /api/v1/bootcamps?select=name,description&sort=name
 //  @access     Public
 exports.getBootcamps =asyncHandler(async (req, res, next) => {
   let query;
