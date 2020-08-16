@@ -37,16 +37,16 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use('/api/v1/bootcamps', bootcamps);
 app.use('/api/v1/courses', courses);
 app.use('/api/v1/auth', auth);
-
+ 
 //Error handler
-app.use(errorHandler)
+app.use(errorHandler);
 
 const PORT = process.env.SERVER_PORT || 3000;
 const server = app.listen(PORT, 
   console.log(`Server running on ${process.env.NODE_ENV} mode on port : ${PORT}`.yellow.bold)
 )
 
-//Handle unhandled promise rejections
+// Handle unhandled promise rejections
 process.on('unhandledRejection', (err, promise) => {
   console.log(`Error: ${err.message}`.red);
   //close server & exit process
