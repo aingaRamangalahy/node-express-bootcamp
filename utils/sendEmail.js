@@ -1,5 +1,4 @@
 const nodemailer = require("nodemailer");
-const { model } = require("mongoose");
 
 const sendEmail = async (options) => {
 

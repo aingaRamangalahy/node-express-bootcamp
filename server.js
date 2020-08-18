@@ -5,6 +5,8 @@ const morgan = require('morgan');
 const colors = require('colors');
 const cookieParser = require('cookie-parser');
 const fileupload = require('express-fileupload');
+const mongoSanitize = require('express-mongo-sanitize');
+
 const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
 //load dotenv configs
@@ -31,8 +33,9 @@ if(process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-// File upload
-app.use(fileupload());
+
+app.use(fileupload()); // File upload
+app.use(mongoSanitize()); // Prevent NoSAL injection
 
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')))
