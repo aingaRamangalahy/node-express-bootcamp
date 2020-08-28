@@ -15,7 +15,7 @@ const cors = require('cors');
 const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
 //load dotenv configs
-dotenv.config({path: './config/config.env'});
+dotenv.config({ path: './config/config.env' });
 
 //Connect to Database
 connectDB();
@@ -34,8 +34,8 @@ app.use(express.json()); //Body parser
 app.use(cookieParser()); //cookie parser
 
 //Dev logging middleware
-if(process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') {
+    app.use(morgan('dev'));
 }
 
 
@@ -46,12 +46,12 @@ app.use(mongoSanitize()); // Prevent NoSQL injection
 app.use(helmet()); //set security header
 app.use(xss()); // Prevent XSS attacks
 const limiter = rateLimit({
-  windowMS: 10 * 60* 1000, // 10mins
-  max: 100
+    windowMS: 10 * 60 * 1000, // 10mins
+    max: 100
 })
 app.use(limiter) // limi request from single IP to 100
 app.use(hpp()); // Prevent http param pollution
-app.use(cors()) // Enable CORS
+//app.use(cors()); // Enable CORS
 
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')))
@@ -62,18 +62,18 @@ app.use('/api/v1/courses', courses);
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/users', users);
 app.use('/api/v1/reviews', reviews);
- 
+
 //Error handler
 app.use(errorHandler);
 
-const PORT = process.env.SERVER_PORT || 3000;
-const server = app.listen(PORT, 
-  console.log(`Server running on ${process.env.NODE_ENV} mode on port : ${PORT}`.yellow.bold)
+const PORT = process.env.SERVER_PORT || 5000;
+const server = app.listen(PORT,
+    console.log(`Server running on ${process.env.NODE_ENV} mode on port : ${PORT}`.yellow.bold)
 )
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err, promise) => {
-  console.log(`Error: ${err.message}`.red);
-  //close server & exit process
-  server.close(() => process.exit(1));
+    console.log(`Error: ${err.message}`.red);
+    //close server & exit process
+    server.close(() => process.exit(1));
 })
