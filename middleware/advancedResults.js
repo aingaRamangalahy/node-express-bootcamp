@@ -2,36 +2,38 @@ const advancedResults = (model, populate) => async (req, res, next) => {
   let query;
 
   // Copy req.query
-  const reqQuery = {...req.query}
+  const reqQuery = { ...req.query };
 
   //Fields to exclude
-  const removeFields = ['select','sort', 'page', 'limit'];
+  const removeFields = ["select", "sort", "page", "limit"];
 
   // Delete removeFields to reqQuery
-  removeFields.forEach(param => delete reqQuery[param]);
+  removeFields.forEach((param) => delete reqQuery[param]);
 
- 
   // Create query String
   let queryStr = JSON.stringify(reqQuery);
- 
+
   // Create operators ($gt|$gte...)
-  queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
-  
+  queryStr = queryStr.replace(
+    /\b(gt|gte|lt|lte|in)\b/g,
+    (match) => `$${match}`
+  );
+
   // Find resources
   query = model.find(JSON.parse(queryStr));
 
   //Select Fields
   if (req.query.select) {
-    const fields = req.query.select.split(',').join(' ');
-    query = query.select(fields)
+    const fields = req.query.select.split(",").join(" ");
+    query = query.select(fields);
   }
 
   //Sort
-  if(req.query.sort) {
-    const sortBy = req.query.sort.split(',').join(' ');
-    query = query.sort(sortBy)
+  if (req.query.sort) {
+    const sortBy = req.query.sort.split(",").join(" ");
+    query = query.sort(sortBy);
   } else {
-    query = query.sort('-createdAt')
+    query = query.sort("-createdAt");
   }
 
   //Paginate
@@ -40,10 +42,10 @@ const advancedResults = (model, populate) => async (req, res, next) => {
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
   const total = await model.countDocuments();
-  
+
   query = query.skip(startIndex).limit(limit);
 
-  if(populate) {
+  if (populate) {
     query = query.populate(populate);
   }
 
@@ -54,27 +56,27 @@ const advancedResults = (model, populate) => async (req, res, next) => {
 
   const pagination = {};
 
-  if(endIndex < total) {
-    console.log('got next')
+  if (endIndex < total) {
+    console.log("got next");
     pagination.next = {
       page: page + 1,
-      limit
-    }
+      limit,
+    };
   }
-  if(startIndex > 0) {
-    console.log('got prev')
+  if (startIndex > 0) {
+    console.log("got prev");
     pagination.prev = {
       page: page - 1,
-      limit
-    }
+      limit,
+    };
   }
 
   res.advancedResults = {
     success: true,
     count: results.length,
     pagination,
-    data: results
-  }
+    data: results,
+  };
 
   next();
 };
